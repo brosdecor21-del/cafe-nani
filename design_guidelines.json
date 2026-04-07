@@ -1,0 +1,105 @@
+{
+  "project_context": {
+    "domain": "Luxury Specialty Coffee Shop",
+    "theme": "LIGHT",
+    "archetype": "Archetype 1 (Organic & Earthy)",
+    "mood": "Elegant, cinematic, warm, premium, tactile"
+  },
+  "typography": {
+    "heading_font": "Cormorant Garamond",
+    "body_font": "Outfit",
+    "rules": [
+      "No generic sans fonts like Inter or Roboto for headings.",
+      "Headlines (Size > 32px) MUST use tracking-tight.",
+      "Overlines MUST be uppercase, tiny (text-xs), tracking-[0.2em].",
+      "Do not exceed text-6xl for hero heading."
+    ]
+  },
+  "color_palette": {
+    "background": "#F9F6F0",
+    "foreground": "#2C2420",
+    "primary": "#1A1614",
+    "accent_1": "#C07D5A",
+    "accent_2": "#8A9A86",
+    "neutral_border": "#E5E0D8",
+    "rules": [
+      "No pure black or white. Use tinted values.",
+      "Text contrast must meet APCA standards."
+    ]
+  },
+  "layout_spacing": {
+    "spacing_scale": "Use p-8, p-12, p-16, p-24, p-32. Avoid cramped typical SaaS spacing.",
+    "grid_system": "Bento Grid (Tetris Mode) for visual collections. Asymmetry over perfect symmetry.",
+    "alignment": "Optical alignment. Left-align dense content.",
+    "rules": [
+      "Direct children only in grid containers.",
+      "Containers with border must have padding."
+    ]
+  },
+  "components": {
+    "buttons": "Shadcn buttons heavily customized. minimal rounding (rounded-sm). Soft shadows with crisp borders.",
+    "cards": "3D tilt cards for the Coffee Collection. Neumorphic or pure minimal borders.",
+    "header": "Glassmorphism: backdrop-blur-xl bg-white/70, 1px delicate inner stroke.",
+    "forms": "Shadcn Form/Input components, styled with earthy borders.",
+    "language_switcher": "Custom toggle in header (HU / EN)."
+  },
+  "interactions_animations": {
+    "hero_animation": "Cinematic steam particles using react-tsparticles forming behind the logo. Logo itself can have a subtle float/entrance animation using framer-motion.",
+    "scroll": "Use lenis for smooth scrolling.",
+    "hover": "Hover states must explicitly set colors. Slight lift (-translate-y-1) for product cards.",
+    "3d_effects": "Use react-parallax-tilt or framer-motion 3D transforms for Coffee Collection."
+  },
+  "media": {
+    "logo": {
+      "url": "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xlsakhdn_Screenshot%202026-04-07%20at%2014.32.42.png",
+      "description": "Dark gray NANI text with hummingbird, transparent background."
+    },
+    "menu_items": [
+      {
+        "name": "Sandwich",
+        "url": "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/jloifxqj_Gemini_Generated_Image_7j1lw47j1lw47j1l.png"
+      },
+      {
+        "name": "Juice 1",
+        "url": "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/04x0rjmk_Gemini_Generated_Image_2mta4k2mta4k2mta.png"
+      },
+      {
+        "name": "Juice 2",
+        "url": "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/n50n4qn5_Gemini_Generated_Image_9jax4l9jax4l9jax.png"
+      },
+      {
+        "name": "Cookies",
+        "url": "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/etgdjdsi_Gemini_Generated_Image_9wt2k49wt2k49wt2.png"
+      }
+    ],
+    "ambience_and_products": [
+      {
+        "category": "coffee_beans",
+        "url": "https://images.unsplash.com/photo-1766073254139-43a6d65110ee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwzfHxzcGVjaWFsdHklMjBjb2ZmZWUlMjBiZWFucyUyMGJhZ3xlbnwwfHx8fDE3NzU1Njg0OTJ8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Specialty coffee beans bag"
+      },
+      {
+        "category": "hero_background_or_about",
+        "url": "https://images.unsplash.com/photo-1759259639667-af32680c21a4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwyfHxiYXJpc3RhJTIwcG91cmluZyUyMGZsYXQlMjB3aGl0ZSUyMGxhdHRlJTIwYXJ0fGVufDB8fHx8MTc3NTU2ODQ5Mnww&ixlib=rb-4.1.0&q=85",
+        "description": "Barista pouring flat white latte art"
+      },
+      {
+        "category": "cafe_interior",
+        "url": "https://images.unsplash.com/photo-1727081979210-ff973479b458?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsdXh1cnklMjBjYWZlJTIwaW50ZXJpb3J8ZW58MHx8fHwxNzc1NTY4NDkyfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Modern luxury cafe interior"
+      }
+    ]
+  },
+  "specific_instructions_to_main_agent": [
+    "Implement Lenis for smooth scrolling. yarn add @studio-freight/lenis",
+    "Build a bilingual toggle (HU/EN) using a Context provider or simple state for the demo.",
+    "Hero Section: Needs to use a particle system (like tsparticles) to create the 'steam particles forming the bird' effect behind the logo. The background must be light so the dark logo is visible, and particles should be a warm dark color.",
+    "Use Framer Motion to stagger elements as they scroll into view.",
+    "Coffee Beans Shop: Create a small e-commerce product grid showing bean varieties.",
+    "Add test IDs (data-testid) to all interactive elements.",
+    "Do not use default Shadcn styles; override them with the provided color palette (Warm Sand, Deep Espresso).",
+    "Install the required font families using Google Fonts in index.html.",
+    "Use lucide-react or @phosphor-icons/react for icons.",
+    "Ensure the contact form uses basic Shadcn input fields but styling blends with the luxury vibe."
+  ]
+}
