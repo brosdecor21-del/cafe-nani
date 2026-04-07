@@ -4,25 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// SVG Hummingbird Logo Component
-const HummingbirdLogo = ({ className = "" }) => (
-  <svg 
-    viewBox="0 0 120 50" 
-    className={className}
-    fill="currentColor"
-  >
-    {/* Hummingbird silhouette */}
-    <g transform="translate(0, 5)">
-      <path d="M8 20 Q12 8, 18 12 Q22 6, 20 14 Q24 10, 22 16 Q28 14, 24 18 Q30 18, 24 22 L20 22 Q18 28, 12 35 L10 32 Q8 28, 8 24 Q4 22, 8 20" />
-      {/* Beak */}
-      <path d="M24 18 L32 16 L24 20 Z" />
-    </g>
-    {/* NANI text */}
-    <text x="38" y="32" fontFamily="'Cormorant Garamond', serif" fontSize="24" fontWeight="500" letterSpacing="-1">
-      NANI
-    </text>
-  </svg>
-);
+// Real NANI Logo Image (golden hummingbird)
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/pwrd2zmm_Gemini_Generated_Image_865jqc865jqc865j.png";
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
@@ -66,7 +49,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center" data-testid="header-logo">
-            <HummingbirdLogo className="h-10 w-auto text-[#1A1614]" />
+            <img src={LOGO_URL} alt="Café Nani" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

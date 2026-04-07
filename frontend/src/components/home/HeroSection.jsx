@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Particles from '@tsparticles/react';
@@ -6,25 +6,10 @@ import { loadSlim } from '@tsparticles/slim';
 import { ChevronDown } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// SVG Hummingbird for Hero
-const HummingbirdHero = ({ className = "" }) => (
-  <svg 
-    viewBox="0 0 200 80" 
-    className={className}
-    fill="currentColor"
-  >
-    {/* Hummingbird silhouette - larger for hero */}
-    <g transform="translate(0, 10)">
-      <path d="M15 35 Q25 12, 35 22 Q42 10, 38 26 Q48 18, 42 30 Q56 26, 46 35 Q60 34, 46 42 L38 42 Q34 52, 22 65 L18 60 Q14 52, 14 44 Q6 42, 15 35" />
-      {/* Beak */}
-      <path d="M46 34 L62 30 L46 38 Z" />
-    </g>
-    {/* NANI text */}
-    <text x="70" y="52" fontFamily="'Cormorant Garamond', serif" fontSize="42" fontWeight="400" letterSpacing="-2">
-      NANI
-    </text>
-  </svg>
-);
+// Real NANI Logo Image (golden hummingbird on white)
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/pwrd2zmm_Gemini_Generated_Image_865jqc865jqc865j.png";
+// Real Café Nani Background (exterior + interior photo)
+const HERO_BG_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xzb6n1de_nani.png";
 
 const HeroSection = () => {
   const { t } = useLanguage();
@@ -46,7 +31,7 @@ const HeroSection = () => {
     fpsLimit: 60,
     particles: {
       color: {
-        value: ['#C07D5A', '#8A9A86', '#2C2420'],
+        value: ['#C9A66B', '#D4B87A', '#F9F6F0'],
       },
       move: {
         direction: 'top',
@@ -93,14 +78,14 @@ const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#F9F6F0]"
       data-testid="hero-section"
     >
-      {/* Background image with overlay */}
+      {/* Real Café Nani Background */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1727081979210-ff973479b458?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsdXh1cnklMjBjYWZlJTIwaW50ZXJpb3J8ZW58MHx8fHwxNzc1NTY4NDkyfDA&ixlib=rb-4.1.0&q=85"
-          alt="Café Nani Interior"
-          className="w-full h-full object-cover opacity-20"
+          src={HERO_BG_URL}
+          alt="Café Nani"
+          className="w-full h-full object-cover object-left"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F9F6F0]/80 via-[#F9F6F0]/60 to-[#F9F6F0]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1614]/70 via-[#1A1614]/50 to-[#1A1614]/80" />
       </div>
 
       {/* Particles container */}
@@ -115,18 +100,23 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        {/* Animated Logo */}
+        {/* Animated Real Logo */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="mb-8"
+          className="mb-6"
         >
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            className="bg-white/95 backdrop-blur-sm px-8 py-6 rounded-sm shadow-2xl inline-block"
           >
-            <HummingbirdHero className="h-24 md:h-32 w-auto mx-auto text-[#1A1614]" />
+            <img 
+              src={LOGO_URL} 
+              alt="Café Nani" 
+              className="h-16 md:h-20 w-auto"
+            />
           </motion.div>
         </motion.div>
 
@@ -135,7 +125,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="overline mb-4"
+          className="overline mb-4 text-[#C9A66B]"
         >
           CAFÉ
         </motion.p>
@@ -145,7 +135,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="text-lg md:text-xl text-[#2C2420]/80 mb-8 max-w-xl mx-auto"
+          className="text-lg md:text-xl text-[#F9F6F0]/90 mb-8 max-w-xl mx-auto"
         >
           {t('hero.subtitle')}
         </motion.p>
@@ -189,7 +179,7 @@ const HeroSection = () => {
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ChevronDown size={24} className="text-[#2C2420]/40" />
+          <ChevronDown size={24} className="text-[#F9F6F0]/60" />
         </motion.div>
       </motion.div>
     </section>

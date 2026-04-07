@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { MapPin, Phone, Clock, Instagram, Facebook } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
+// Real NANI Logo
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/pwrd2zmm_Gemini_Generated_Image_865jqc865jqc865j.png";
+
 const Footer = () => {
   const { t } = useLanguage();
 
@@ -12,7 +15,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <h3 className="font-['Cormorant_Garamond'] text-3xl mb-4 text-[#F9F6F0]">Café Nani</h3>
+            <img src={LOGO_URL} alt="Café Nani" className="h-12 w-auto mb-4 brightness-0 invert" />
             <p className="text-[#E5E0D8] text-sm leading-relaxed">
               {t('hero.subtitle')}
             </p>

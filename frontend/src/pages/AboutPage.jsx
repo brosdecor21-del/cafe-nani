@@ -56,13 +56,13 @@ const AboutPage = () => {
             >
               <div className="aspect-[4/5] rounded-sm overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1759259639667-af32680c21a4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NjV8MHwxfHNlYXJjaHwyfHxiYXJpc3RhJTIwcG91cmluZyUyMGZsYXQlMjB3aGl0ZSUyMGxhdHRlJTIwYXJ0fGVufDB8fHx8MTc3NTU2ODQ5Mnww&ixlib=rb-4.1.0&q=85"
-                  alt="Barista making coffee"
-                  className="w-full h-full object-cover"
+                  src="https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xzb6n1de_nani.png"
+                  alt="Café Nani"
+                  className="w-full h-full object-cover object-left"
                 />
               </div>
               {/* Floating accent */}
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[#C07D5A] rounded-sm hidden lg:block" />
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[#C9A66B] rounded-sm hidden lg:block" />
             </motion.div>
           </div>
         </section>

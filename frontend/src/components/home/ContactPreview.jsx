@@ -21,9 +21,9 @@ const ContactPreview = () => {
           >
             <div className="aspect-[4/3] rounded-sm overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1727081979210-ff973479b458?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsdXh1cnklMjBjYWZlJTIwaW50ZXJpb3J8ZW58MHx8fHwxNzc1NTY4NDkyfDA&ixlib=rb-4.1.0&q=85"
+                src="https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xzb6n1de_nani.png"
                 alt="Café Nani Interior"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-right"
               />
             </div>
             {/* Floating card */}
