@@ -3,8 +3,20 @@ import { Link } from 'react-router-dom';
 import { MapPin, Phone, Clock, Instagram, Facebook } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Real NANI Logo
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/pwrd2zmm_Gemini_Generated_Image_865jqc865jqc865j.png";
+// Custom Café Nani Logo Component for Footer (white/cream color)
+const CafeNaniLogo = ({ className = "", color = "#F9F6F0" }) => (
+  <svg viewBox="0 0 200 50" className={className} fill="none">
+    {/* Hummingbird */}
+    <g fill={color}>
+      <path d="M12 25c0-8 6-15 12-12 2-4 6-6 8-4 3-2 6-1 6 2 4-1 6 1 5 4 3 1 4 4 2 6l-6 1c-2 8-8 14-14 18l-4-4c-4-3-6-7-6-11h-3z" />
+      <path d="M35 21l12-3-12 6z" />
+    </g>
+    {/* Café Nani Text */}
+    <text x="52" y="34" fontFamily="'Cormorant Garamond', Georgia, serif" fontSize="26" fontWeight="500" fill={color} letterSpacing="-0.5">
+      Café Nani
+    </text>
+  </svg>
+);
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -15,7 +27,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <img src={LOGO_URL} alt="Café Nani" className="h-12 w-auto mb-4 brightness-0 invert" />
+            <CafeNaniLogo className="h-12 w-auto mb-4" />
             <p className="text-[#E5E0D8] text-sm leading-relaxed">
               {t('hero.subtitle')}
             </p>

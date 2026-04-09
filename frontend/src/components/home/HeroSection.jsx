@@ -6,10 +6,25 @@ import { loadSlim } from '@tsparticles/slim';
 import { ChevronDown } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Real NANI Logo Image (golden hummingbird on white)
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/pwrd2zmm_Gemini_Generated_Image_865jqc865jqc865j.png";
 // Real Café Nani Background (exterior + interior photo)
 const HERO_BG_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xzb6n1de_nani.png";
+
+// Custom Café Nani Hero Logo - Large golden version
+const CafeNaniHeroLogo = ({ className = "" }) => (
+  <svg viewBox="0 0 280 80" className={className} fill="none">
+    {/* Hummingbird - larger for hero */}
+    <g fill="#C9A66B">
+      {/* Body */}
+      <path d="M15 40c0-12 9-22 18-18 3-6 9-9 12-6 4-3 9-1.5 9 3 6-1.5 9 1.5 7.5 6 4.5 1.5 6 6 3 9l-9 1.5c-3 12-12 21-21 27l-6-6c-6-4.5-9-10.5-9-16.5h-4.5z" />
+      {/* Beak */}
+      <path d="M52.5 31.5l18-4.5-18 9z" />
+    </g>
+    {/* Café Nani Text */}
+    <text x="78" y="52" fontFamily="'Cormorant Garamond', Georgia, serif" fontSize="38" fontWeight="500" fill="#C9A66B" letterSpacing="-1">
+      Café Nani
+    </text>
+  </svg>
+);
 
 const HeroSection = () => {
   const { t } = useLanguage();
@@ -100,41 +115,26 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        {/* Animated Real Logo */}
+        {/* Animated SVG Logo - No background */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="mb-6"
+          className="mb-8"
         >
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="bg-white/95 backdrop-blur-sm px-8 py-6 rounded-sm shadow-2xl inline-block"
           >
-            <img 
-              src={LOGO_URL} 
-              alt="Café Nani" 
-              className="h-16 md:h-20 w-auto"
-            />
+            <CafeNaniHeroLogo className="h-20 md:h-28 w-auto mx-auto drop-shadow-2xl" />
           </motion.div>
         </motion.div>
-
-        {/* Café text */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="overline mb-4 text-[#C9A66B]"
-        >
-          CAFÉ
-        </motion.p>
 
         {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
           className="text-lg md:text-xl text-[#F9F6F0]/90 mb-8 max-w-xl mx-auto"
         >
           {t('hero.subtitle')}
