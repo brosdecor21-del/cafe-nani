@@ -4,21 +4,27 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Custom Café Nani Logo Component - Golden Hummingbird with transparent background
-const CafeNaniLogo = ({ className = "", color = "#C9A66B" }) => (
-  <svg viewBox="0 0 200 50" className={className} fill="none">
-    {/* Hummingbird */}
+// Precise recreation of original NANI logo
+const NaniLogo = ({ className = "", color = "#C9A66B" }) => (
+  <svg viewBox="0 0 200 55" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Hummingbird - flying pose */}
     <g fill={color}>
       {/* Body */}
-      <path d="M12 25c0-8 6-15 12-12 2-4 6-6 8-4 3-2 6-1 6 2 4-1 6 1 5 4 3 1 4 4 2 6l-6 1c-2 8-8 14-14 18l-4-4c-4-3-6-7-6-11h-3z" />
+      <ellipse cx="24" cy="28" rx="12" ry="13" transform="rotate(-15 24 28)" />
+      {/* Head */}
+      <circle cx="34" cy="18" r="7" />
       {/* Beak */}
-      <path d="M35 21l12-3-12 6z" />
-      {/* Wing detail */}
-      <path d="M18 18c2-3 5-5 8-4m-6 8c2-2 4-3 7-2" stroke={color} strokeWidth="1" fill="none" opacity="0.5"/>
+      <path d="M39 16 Q46 14, 56 11 Q46 17, 39 19 Z" />
+      {/* Wing */}
+      <path d="M15 22 Q8 15, 4 6 Q10 14, 16 20 Z" />
+      {/* Tail */}
+      <path d="M15 38 Q8 46, 4 54 L7 51 Q11 44, 15 38 Z" />
+      <path d="M18 40 Q13 48, 10 56 L13 52 Q16 46, 18 40 Z" />
     </g>
-    {/* Café Nani Text */}
-    <text x="52" y="34" fontFamily="'Cormorant Garamond', Georgia, serif" fontSize="26" fontWeight="500" fill={color} letterSpacing="-0.5">
-      Café Nani
+    {/* NANI text */}
+    <text x="64" y="36" fontFamily="'Cormorant Garamond', Georgia, serif" 
+          fontSize="32" fontWeight="500" letterSpacing="3" fill={color}>
+      NANI
     </text>
   </svg>
 );
@@ -65,7 +71,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center" data-testid="header-logo">
-            <CafeNaniLogo className="h-10 w-auto" />
+            <NaniLogo className="h-9 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

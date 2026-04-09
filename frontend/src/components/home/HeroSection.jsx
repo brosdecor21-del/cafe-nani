@@ -9,20 +9,39 @@ import { useLanguage } from '../../context/LanguageContext';
 // Real Café Nani Background (exterior + interior photo)
 const HERO_BG_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xzb6n1de_nani.png";
 
-// Custom Café Nani Hero Logo - Large golden version
-const CafeNaniHeroLogo = ({ className = "" }) => (
-  <svg viewBox="0 0 280 80" className={className} fill="none">
-    {/* Hummingbird - larger for hero */}
-    <g fill="#C9A66B">
-      {/* Body */}
-      <path d="M15 40c0-12 9-22 18-18 3-6 9-9 12-6 4-3 9-1.5 9 3 6-1.5 9 1.5 7.5 6 4.5 1.5 6 6 3 9l-9 1.5c-3 12-12 21-21 27l-6-6c-6-4.5-9-10.5-9-16.5h-4.5z" />
-      {/* Beak */}
-      <path d="M52.5 31.5l18-4.5-18 9z" />
+// Precise recreation of original NANI logo hummingbird + serif font
+const NaniLogo = ({ className = "", color = "#C9A66B", showCafe = false }) => (
+  <svg viewBox="0 0 280 80" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Hummingbird - flying pose with spread wings like original */}
+    <g fill={color}>
+      {/* Body - oval tilted */}
+      <ellipse cx="32" cy="38" rx="16" ry="18" transform="rotate(-15 32 38)" />
+      {/* Head - smaller circle */}
+      <circle cx="46" cy="24" r="9" />
+      {/* Long elegant beak */}
+      <path d="M52 22 Q62 18, 78 14 Q62 22, 52 26 Z" />
+      {/* Upper wing - spread upward */}
+      <path d="M20 30 Q10 20, 4 8 Q14 18, 22 26 Z" />
+      {/* Lower wing hint */}
+      <path d="M24 44 Q16 48, 10 56 Q18 50, 26 46 Z" opacity="0.8" />
+      {/* Tail feathers - elegant fan */}
+      <path d="M20 52 Q10 62, 4 74 L8 70 Q14 60, 20 52 Z" />
+      <path d="M24 54 Q18 66, 14 76 L18 72 Q22 62, 24 54 Z" />
     </g>
-    {/* Café Nani Text */}
-    <text x="78" y="52" fontFamily="'Cormorant Garamond', Georgia, serif" fontSize="38" fontWeight="500" fill="#C9A66B" letterSpacing="-1">
-      Café Nani
-    </text>
+    {/* Text */}
+    <g fill={color}>
+      {showCafe && (
+        <text x="90" y="32" fontFamily="'Cormorant Garamond', Georgia, serif" 
+              fontSize="18" fontWeight="400" fontStyle="italic" letterSpacing="2">
+          Café
+        </text>
+      )}
+      <text x="90" y={showCafe ? "62" : "52"} 
+            fontFamily="'Cormorant Garamond', Georgia, serif" 
+            fontSize="44" fontWeight="500" letterSpacing="4">
+        NANI
+      </text>
+    </g>
   </svg>
 );
 
@@ -115,7 +134,7 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        {/* Animated SVG Logo - No background */}
+        {/* SVG Logo - matching original style, transparent background */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,8 +144,9 @@ const HeroSection = () => {
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ filter: 'drop-shadow(0 4px 30px rgba(201,166,107,0.4))' }}
           >
-            <CafeNaniHeroLogo className="h-20 md:h-28 w-auto mx-auto drop-shadow-2xl" />
+            <NaniLogo className="h-20 md:h-28 w-auto mx-auto" showCafe={true} />
           </motion.div>
         </motion.div>
 
