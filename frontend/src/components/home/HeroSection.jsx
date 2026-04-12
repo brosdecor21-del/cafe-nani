@@ -78,14 +78,14 @@ const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#F9F6F0]"
       data-testid="hero-section"
     >
-      {/* Real Café Nani Background */}
+      {/* Real Café Nani Background - darker overlay for better contrast */}
       <div className="absolute inset-0 z-0">
         <img
           src={HERO_BG_URL}
           alt="Café Nani"
           className="w-full h-full object-cover object-left"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1A1614]/70 via-[#1A1614]/50 to-[#1A1614]/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0806]/85 via-[#1A1614]/75 to-[#0A0806]/90" />
       </div>
 
       {/* Particles container */}
