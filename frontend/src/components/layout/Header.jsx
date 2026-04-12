@@ -52,7 +52,7 @@ const Header = () => {
             <img 
               src={LOGO_URL} 
               alt="NANI" 
-              className="h-10 w-auto"
+              className="h-14 w-auto"
               style={{ mixBlendMode: 'screen' }}
             />
           </Link>

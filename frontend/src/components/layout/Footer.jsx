@@ -18,7 +18,7 @@ const Footer = () => {
             <img 
               src={LOGO_URL} 
               alt="NANI" 
-              className="h-12 w-auto mb-4"
+              className="h-16 w-auto mb-4"
               style={{ mixBlendMode: 'screen' }}
             />
             <p className="text-[#E5E0D8] text-sm leading-relaxed">

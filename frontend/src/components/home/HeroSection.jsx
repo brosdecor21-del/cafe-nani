@@ -115,7 +115,7 @@ const HeroSection = () => {
             <img 
               src={LOGO_URL} 
               alt="NANI" 
-              className="h-24 md:h-32 w-auto mx-auto"
+              className="h-32 md:h-44 w-auto mx-auto"
               style={{ mixBlendMode: 'screen' }}
             />
           </motion.div>
