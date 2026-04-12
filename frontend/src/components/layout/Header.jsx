@@ -4,30 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Precise recreation of original NANI logo
-const NaniLogo = ({ className = "", color = "#C9A66B" }) => (
-  <svg viewBox="0 0 200 55" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Hummingbird - flying pose */}
-    <g fill={color}>
-      {/* Body */}
-      <ellipse cx="24" cy="28" rx="12" ry="13" transform="rotate(-15 24 28)" />
-      {/* Head */}
-      <circle cx="34" cy="18" r="7" />
-      {/* Beak */}
-      <path d="M39 16 Q46 14, 56 11 Q46 17, 39 19 Z" />
-      {/* Wing */}
-      <path d="M15 22 Q8 15, 4 6 Q10 14, 16 20 Z" />
-      {/* Tail */}
-      <path d="M15 38 Q8 46, 4 54 L7 51 Q11 44, 15 38 Z" />
-      <path d="M18 40 Q13 48, 10 56 L13 52 Q16 46, 18 40 Z" />
-    </g>
-    {/* NANI text */}
-    <text x="64" y="36" fontFamily="'Cormorant Garamond', Georgia, serif" 
-          fontSize="32" fontWeight="500" letterSpacing="3" fill={color}>
-      NANI
-    </text>
-  </svg>
-);
+// Original NANI logo with black background (screen blend makes black transparent)
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/h6dh4udx_nani1.png";
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
@@ -69,9 +47,14 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
+          {/* Logo - Original with screen blend to remove black background */}
           <Link to="/" className="flex items-center" data-testid="header-logo">
-            <NaniLogo className="h-9 w-auto" />
+            <img 
+              src={LOGO_URL} 
+              alt="NANI" 
+              className="h-10 w-auto"
+              style={{ mixBlendMode: 'screen' }}
+            />
           </Link>
 
           {/* Desktop Navigation */}

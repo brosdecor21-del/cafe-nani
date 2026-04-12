@@ -6,44 +6,10 @@ import { loadSlim } from '@tsparticles/slim';
 import { ChevronDown } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-// Real Café Nani Background (exterior + interior photo)
+// Original NANI logo (black bg removed with screen blend)
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/h6dh4udx_nani1.png";
+// Real Café Nani Background
 const HERO_BG_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/xzb6n1de_nani.png";
-
-// Precise recreation of original NANI logo hummingbird + serif font
-const NaniLogo = ({ className = "", color = "#C9A66B", showCafe = false }) => (
-  <svg viewBox="0 0 280 80" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Hummingbird - flying pose with spread wings like original */}
-    <g fill={color}>
-      {/* Body - oval tilted */}
-      <ellipse cx="32" cy="38" rx="16" ry="18" transform="rotate(-15 32 38)" />
-      {/* Head - smaller circle */}
-      <circle cx="46" cy="24" r="9" />
-      {/* Long elegant beak */}
-      <path d="M52 22 Q62 18, 78 14 Q62 22, 52 26 Z" />
-      {/* Upper wing - spread upward */}
-      <path d="M20 30 Q10 20, 4 8 Q14 18, 22 26 Z" />
-      {/* Lower wing hint */}
-      <path d="M24 44 Q16 48, 10 56 Q18 50, 26 46 Z" opacity="0.8" />
-      {/* Tail feathers - elegant fan */}
-      <path d="M20 52 Q10 62, 4 74 L8 70 Q14 60, 20 52 Z" />
-      <path d="M24 54 Q18 66, 14 76 L18 72 Q22 62, 24 54 Z" />
-    </g>
-    {/* Text */}
-    <g fill={color}>
-      {showCafe && (
-        <text x="90" y="32" fontFamily="'Cormorant Garamond', Georgia, serif" 
-              fontSize="18" fontWeight="400" fontStyle="italic" letterSpacing="2">
-          Café
-        </text>
-      )}
-      <text x="90" y={showCafe ? "62" : "52"} 
-            fontFamily="'Cormorant Garamond', Georgia, serif" 
-            fontSize="44" fontWeight="500" letterSpacing="4">
-        NANI
-      </text>
-    </g>
-  </svg>
-);
 
 const HeroSection = () => {
   const { t } = useLanguage();
@@ -134,7 +100,7 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        {/* SVG Logo - matching original style, transparent background */}
+        {/* Original Logo - screen blend removes black background */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -146,7 +112,12 @@ const HeroSection = () => {
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             style={{ filter: 'drop-shadow(0 4px 30px rgba(201,166,107,0.4))' }}
           >
-            <NaniLogo className="h-20 md:h-28 w-auto mx-auto" showCafe={true} />
+            <img 
+              src={LOGO_URL} 
+              alt="NANI" 
+              className="h-24 md:h-32 w-auto mx-auto"
+              style={{ mixBlendMode: 'screen' }}
+            />
           </motion.div>
         </motion.div>
 
