@@ -41,9 +41,7 @@ const Header = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'glass-header shadow-sm' : 'bg-transparent'
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 bg-[#1A1614]"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
@@ -66,15 +64,15 @@ const Header = () => {
                 data-testid={`nav-link-${item.path.replace('/', '') || 'home'}`}
                 className={`relative text-sm font-medium tracking-wide transition-colors duration-300 ${
                   isActive(item.path)
-                    ? 'text-[#C07D5A]'
-                    : 'text-[#2C2420] hover:text-[#C07D5A]'
+                    ? 'text-[#C9A66B]'
+                    : 'text-[#C9A66B]/80 hover:text-[#C9A66B]'
                 }`}
               >
                 {item.label}
                 {isActive(item.path) && (
                   <motion.span
                     layoutId="activeNav"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#C07D5A]"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#C9A66B]"
                     initial={false}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
@@ -86,17 +84,25 @@ const Header = () => {
           {/* Language Switcher & Mobile Menu */}
           <div className="flex items-center gap-4">
             {/* Language Switcher */}
-            <div className="lang-switch" data-testid="language-switcher">
+            <div className="flex bg-[#2C2420] rounded-full p-1 gap-1" data-testid="language-switcher">
               <button
                 onClick={() => setLanguage('hu')}
-                className={language === 'hu' ? 'active' : ''}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all ${
+                  language === 'hu' 
+                    ? 'bg-[#C9A66B] text-[#1A1614]' 
+                    : 'text-[#C9A66B]/70 hover:text-[#C9A66B]'
+                }`}
                 data-testid="lang-hu"
               >
                 HU
               </button>
               <button
                 onClick={() => setLanguage('en')}
-                className={language === 'en' ? 'active' : ''}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all ${
+                  language === 'en' 
+                    ? 'bg-[#C9A66B] text-[#1A1614]' 
+                    : 'text-[#C9A66B]/70 hover:text-[#C9A66B]'
+                }`}
                 data-testid="lang-en"
               >
                 EN
@@ -106,7 +112,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-[#1A1614]"
+              className="md:hidden p-2 text-[#C9A66B]"
               data-testid="mobile-menu-toggle"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -123,7 +129,7 @@ const Header = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#F9F6F0] border-t border-[#E5E0D8]"
+            className="md:hidden bg-[#1A1614] border-t border-[#2C2420]"
             data-testid="mobile-nav"
           >
             <div className="px-6 py-4 space-y-3">
@@ -134,8 +140,8 @@ const Header = () => {
                   data-testid={`mobile-nav-link-${item.path.replace('/', '') || 'home'}`}
                   className={`block py-3 text-lg font-medium transition-colors ${
                     isActive(item.path)
-                      ? 'text-[#C07D5A]'
-                      : 'text-[#2C2420]'
+                      ? 'text-[#C9A66B]'
+                      : 'text-[#C9A66B]/70'
                   }`}
                 >
                   {item.label}
