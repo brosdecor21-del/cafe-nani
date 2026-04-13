@@ -12,7 +12,7 @@ export const CartProvider = ({ children }) => {
     setLastAddedItem(item);
     setCart((prev) => {
       const existingIndex = prev.findIndex(
-        (i) => i.id === item.id && i.size === item.size
+        (i) => i.id === item.id && i.size === item.size && i.type === item.type
       );
       
       if (existingIndex >= 0) {
@@ -31,19 +31,19 @@ export const CartProvider = ({ children }) => {
     setTimeout(() => setLastAddedItem(null), 1000);
   }, []);
 
-  const removeFromCart = useCallback((itemId, size) => {
-    setCart((prev) => prev.filter((item) => !(item.id === itemId && item.size === size)));
+  const removeFromCart = useCallback((itemId, size, type) => {
+    setCart((prev) => prev.filter((item) => !(item.id === itemId && item.size === size && item.type === type)));
   }, []);
 
-  const updateQuantity = useCallback((itemId, size, newQuantity) => {
+  const updateQuantity = useCallback((itemId, size, newQuantity, type) => {
     if (newQuantity < 1) {
-      removeFromCart(itemId, size);
+      removeFromCart(itemId, size, type);
       return;
     }
     
     setCart((prev) =>
       prev.map((item) =>
-        item.id === itemId && item.size === size
+        item.id === itemId && item.size === size && item.type === type
           ? { ...item, quantity: newQuantity }
           : item
       )

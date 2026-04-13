@@ -330,6 +330,7 @@ const MenuItemModal = ({ item, isOpen, onClose, language }) => {
                     onClick={() => {
                       addToCart({ 
                         ...item, 
+                        type: 'menu',
                         size: selectedSize, 
                         quantity, 
                         finalPrice: finalPrice 

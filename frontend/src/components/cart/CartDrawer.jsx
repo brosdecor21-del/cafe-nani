@@ -9,7 +9,7 @@ const CartItem = ({ item, language, onUpdateQuantity, onRemove }) => {
   const price = item.finalPrice || item.price;
   const sizeLabels = {
     small: { hu: 'Kicsi', en: 'Small' },
-    medium: { hu: 'Közepes', en: 'Medium' },
+    medium: { hu: 'Kozepes', en: 'Medium' },
     large: { hu: 'Nagy', en: 'Large' },
   };
 
@@ -40,12 +40,17 @@ const CartItem = ({ item, language, onUpdateQuantity, onRemove }) => {
             {language === 'hu' ? sizeLabels[item.size]?.hu : sizeLabels[item.size]?.en}
           </p>
         )}
+        {item.type === 'bean' && item.weight && (
+          <p className="text-xs text-[#3A2F2A]/60 mt-0.5">
+            {item.weight}g
+          </p>
+        )}
         <p className="text-[#C8A97E] font-medium mt-1">{price} Ft</p>
 
         {/* Quantity Controls */}
         <div className="flex items-center gap-3 mt-2">
           <button
-            onClick={() => onUpdateQuantity(item.id, item.size, item.quantity - 1)}
+            onClick={() => onUpdateQuantity(item.id, item.size, item.quantity - 1, item.type)}
             className="w-7 h-7 flex items-center justify-center bg-[#F8F5F0] rounded-md hover:bg-[#E5E0D8] transition-colors"
           >
             <Minus size={14} />
@@ -59,7 +64,7 @@ const CartItem = ({ item, language, onUpdateQuantity, onRemove }) => {
             {item.quantity}
           </motion.span>
           <button
-            onClick={() => onUpdateQuantity(item.id, item.size, item.quantity + 1)}
+            onClick={() => onUpdateQuantity(item.id, item.size, item.quantity + 1, item.type)}
             className="w-7 h-7 flex items-center justify-center bg-[#F8F5F0] rounded-md hover:bg-[#E5E0D8] transition-colors"
           >
             <Plus size={14} />
@@ -69,7 +74,7 @@ const CartItem = ({ item, language, onUpdateQuantity, onRemove }) => {
 
       {/* Remove */}
       <button
-        onClick={() => onRemove(item.id, item.size)}
+        onClick={() => onRemove(item.id, item.size, item.type)}
         className="p-2 text-[#3A2F2A]/40 hover:text-red-500 transition-colors self-start"
         aria-label="Remove item"
       >

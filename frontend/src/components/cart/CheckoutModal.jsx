@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check, CreditCard, Wallet, Banknote, MapPin, Coffee, ArrowLeft, ArrowRight, Loader2, PartyPopper } from 'lucide-react';
+import { X, Check, CreditCard, Wallet, Banknote, MapPin, Coffee, ArrowLeft, ArrowRight, Loader2, Truck, Store } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { Button } from '../ui/button';
@@ -25,48 +25,63 @@ const CheckoutModal = () => {
     phone: '',
     orderType: 'pickup',
     paymentMethod: 'card',
+    address: '',
+    city: '',
+    zipCode: '',
   });
 
   const [errors, setErrors] = useState({});
 
-  // Translations
+  const hasBeans = useMemo(() => cart.some(item => item.type === 'bean'), [cart]);
+  const hasMenuItems = useMemo(() => cart.some(item => item.type !== 'bean'), [cart]);
+
   const t = {
-    checkout: language === 'hu' ? 'Pénztár' : 'Checkout',
+    checkout: language === 'hu' ? 'Penztár' : 'Checkout',
     step1: language === 'hu' ? 'Adatok' : 'Details',
-    step2: language === 'hu' ? 'Rendelés típusa' : 'Order Type',
-    step3: language === 'hu' ? 'Fizetés' : 'Payment',
-    step4: language === 'hu' ? 'Áttekintés' : 'Review',
-    name: language === 'hu' ? 'Név' : 'Name',
+    step2: language === 'hu' ? 'Rendeles tipusa' : 'Order Type',
+    step3: language === 'hu' ? 'Fizetes' : 'Payment',
+    step4: language === 'hu' ? 'Attekintes' : 'Review',
+    name: language === 'hu' ? 'Nev' : 'Name',
     email: language === 'hu' ? 'Email' : 'Email',
-    phone: language === 'hu' ? 'Telefonszám' : 'Phone Number',
-    pickup: language === 'hu' ? 'Elvitel' : 'Pickup',
-    pickupDesc: language === 'hu' ? 'Vedd át a kávézóban' : 'Pick up at the café',
-    dineIn: language === 'hu' ? 'Helyben fogyasztás' : 'Dine-in',
-    dineInDesc: language === 'hu' ? 'Élvezd a helyszínen' : 'Enjoy at the café',
-    card: language === 'hu' ? 'Bankkártya' : 'Credit/Debit Card',
+    phone: language === 'hu' ? 'Telefonszam' : 'Phone Number',
+    delivery: language === 'hu' ? 'Hazhoz szallitas' : 'Home Delivery',
+    deliveryDesc: language === 'hu' ? 'Szallitjuk a cimedre (1-2 munkanap)' : 'Delivered to your address (1-2 business days)',
+    pickup: language === 'hu' ? 'Helyben atvétel' : 'Store Pickup',
+    pickupDesc: language === 'hu' ? 'Vedd at a kavezóban' : 'Pick up at the café',
+    dineIn: language === 'hu' ? 'Helyben fogyasztas' : 'Dine-in',
+    dineInDesc: language === 'hu' ? 'Elvezd a helyszinen' : 'Enjoy at the café',
+    card: language === 'hu' ? 'Bankkartya' : 'Credit/Debit Card',
     applePay: 'Apple Pay',
-    cash: language === 'hu' ? 'Készpénz' : 'Cash',
-    cashDesc: language === 'hu' ? 'Fizetés átvételkor' : 'Pay on pickup',
-    orderSummary: language === 'hu' ? 'Rendelés összegzése' : 'Order Summary',
-    subtotal: language === 'hu' ? 'Részösszeg' : 'Subtotal',
-    total: language === 'hu' ? 'Összesen' : 'Total',
-    prepTime: language === 'hu' ? 'Várható elkészülés' : 'Estimated prep time',
+    cash: language === 'hu' ? 'Keszpenz' : 'Cash',
+    cashDesc: language === 'hu' ? 'Fizetes atvételkor' : 'Pay on pickup/delivery',
+    orderSummary: language === 'hu' ? 'Rendeles osszegzese' : 'Order Summary',
+    subtotal: language === 'hu' ? 'Reszosszeg' : 'Subtotal',
+    deliveryFee: language === 'hu' ? 'Szallitasi dij' : 'Delivery Fee',
+    total: language === 'hu' ? 'Osszesen' : 'Total',
+    prepTime: language === 'hu' ? 'Varhato elkeszules' : 'Estimated prep time',
+    deliveryTime: language === 'hu' ? 'Varhato kiszallitas' : 'Estimated delivery',
     minutes: language === 'hu' ? 'perc' : 'minutes',
-    placeOrder: language === 'hu' ? 'Rendelés leadása' : 'Place Order',
-    processing: language === 'hu' ? 'Feldolgozás...' : 'Processing...',
+    businessDays: language === 'hu' ? '1-2 munkanap' : '1-2 business days',
+    placeOrder: language === 'hu' ? 'Rendeles leadasa' : 'Place Order',
+    processing: language === 'hu' ? 'Feldolgozas...' : 'Processing...',
     back: language === 'hu' ? 'Vissza' : 'Back',
-    next: language === 'hu' ? 'Tovább' : 'Next',
-    orderConfirmed: language === 'hu' ? 'Rendelés megerősítve!' : 'Order Confirmed!',
-    thankYou: language === 'hu' ? 'Köszönjük a rendelését!' : 'Thank you for your order!',
-    orderNumber: language === 'hu' ? 'Rendelésszám' : 'Order Number',
-    backToMenu: language === 'hu' ? 'Vissza a menübe' : 'Back to Menu',
-    required: language === 'hu' ? 'Kötelező mező' : 'Required field',
-    invalidEmail: language === 'hu' ? 'Érvénytelen email' : 'Invalid email',
+    next: language === 'hu' ? 'Tovabb' : 'Next',
+    orderConfirmed: language === 'hu' ? 'Rendeles megerositve!' : 'Order Confirmed!',
+    thankYou: language === 'hu' ? 'Koszonjuk a rendelesedet!' : 'Thank you for your order!',
+    orderNumber: language === 'hu' ? 'Rendelesszam' : 'Order Number',
+    backToMenu: language === 'hu' ? 'Vissza a menuebe' : 'Back to Menu',
+    required: language === 'hu' ? 'Kotelez mez' : 'Required field',
+    invalidEmail: language === 'hu' ? 'Ervenytelen email' : 'Invalid email',
+    address: language === 'hu' ? 'Cim' : 'Address',
+    city: language === 'hu' ? 'Varos' : 'City',
+    zipCode: language === 'hu' ? 'Iranyitoszam' : 'Zip Code',
+    free: language === 'hu' ? 'Ingyenes' : 'Free',
   };
 
   const subtotal = getSubtotal();
+  const deliveryFee = formData.orderType === 'delivery' ? 990 : 0;
+  const total = subtotal + deliveryFee;
 
-  // Reset on close
   useEffect(() => {
     if (!isCheckoutOpen) {
       setTimeout(() => {
@@ -76,15 +91,17 @@ const CheckoutModal = () => {
           name: '',
           email: '',
           phone: '',
-          orderType: 'pickup',
+          orderType: hasBeans && !hasMenuItems ? 'delivery' : 'pickup',
           paymentMethod: 'card',
+          address: '',
+          city: '',
+          zipCode: '',
         });
         setErrors({});
       }, 300);
     }
-  }, [isCheckoutOpen]);
+  }, [isCheckoutOpen, hasBeans, hasMenuItems]);
 
-  // Close on ESC
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape' && !isProcessing) closeCheckout();
@@ -93,16 +110,13 @@ const CheckoutModal = () => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [closeCheckout, isProcessing]);
 
-  // Prevent body scroll
   useEffect(() => {
     if (isCheckoutOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isCheckoutOpen]);
 
   const validateStep = () => {
@@ -113,6 +127,12 @@ const CheckoutModal = () => {
       if (!formData.email.trim()) newErrors.email = t.required;
       else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = t.invalidEmail;
       if (!formData.phone.trim()) newErrors.phone = t.required;
+    }
+
+    if (currentStep === 1 && formData.orderType === 'delivery') {
+      if (!formData.address.trim()) newErrors.address = t.required;
+      if (!formData.city.trim()) newErrors.city = t.required;
+      if (!formData.zipCode.trim()) newErrors.zipCode = t.required;
     }
     
     setErrors(newErrors);
@@ -135,27 +155,17 @@ const CheckoutModal = () => {
 
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
-    
-    // Simulate order processing
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Generate order number
     const orderNum = `NANI-${Date.now().toString(36).toUpperCase()}`;
     setOrderNumber(orderNum);
-    
-    // Show success
     setOrderComplete(true);
     setIsProcessing(false);
-    
-    // Confetti celebration
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
       colors: ['#C8A97E', '#3A2F2A', '#F8F5F0'],
     });
-    
-    // Clear cart
     clearCart();
   };
 
@@ -167,7 +177,6 @@ const CheckoutModal = () => {
     }
   };
 
-  // Step components
   const renderStep = () => {
     switch (currentStep) {
       case 0:
@@ -187,6 +196,7 @@ const CheckoutModal = () => {
                 onChange={handleInputChange}
                 className={`mt-2 ${errors.name ? 'border-red-500' : 'border-[#E5E0D8]'}`}
                 placeholder="John Doe"
+                data-testid="checkout-name-input"
               />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
@@ -200,6 +210,7 @@ const CheckoutModal = () => {
                 onChange={handleInputChange}
                 className={`mt-2 ${errors.email ? 'border-red-500' : 'border-[#E5E0D8]'}`}
                 placeholder="john@example.com"
+                data-testid="checkout-email-input"
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
@@ -213,6 +224,7 @@ const CheckoutModal = () => {
                 onChange={handleInputChange}
                 className={`mt-2 ${errors.phone ? 'border-red-500' : 'border-[#E5E0D8]'}`}
                 placeholder="+36 20 123 4567"
+                data-testid="checkout-phone-input"
               />
               {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
             </div>
@@ -227,6 +239,35 @@ const CheckoutModal = () => {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-4"
           >
+            {/* Delivery option - shown when beans in cart */}
+            {hasBeans && (
+              <button
+                onClick={() => setFormData(prev => ({ ...prev, orderType: 'delivery' }))}
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                  formData.orderType === 'delivery'
+                    ? 'border-[#C8A97E] bg-[#C8A97E]/10'
+                    : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
+                }`}
+                data-testid="order-type-delivery"
+              >
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    formData.orderType === 'delivery' ? 'bg-[#C8A97E]' : 'bg-[#F8F5F0]'
+                  }`}>
+                    <Truck size={20} className={formData.orderType === 'delivery' ? 'text-white' : 'text-[#3A2F2A]'} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-[#3A2F2A]">{t.delivery}</p>
+                    <p className="text-sm text-[#3A2F2A]/60">{t.deliveryDesc}</p>
+                  </div>
+                  {formData.orderType === 'delivery' && (
+                    <Check size={20} className="ml-auto text-[#C8A97E]" />
+                  )}
+                </div>
+              </button>
+            )}
+
+            {/* Pickup option - always shown */}
             <button
               onClick={() => setFormData(prev => ({ ...prev, orderType: 'pickup' }))}
               className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
@@ -234,12 +275,13 @@ const CheckoutModal = () => {
                   ? 'border-[#C8A97E] bg-[#C8A97E]/10'
                   : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
               }`}
+              data-testid="order-type-pickup"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
                   formData.orderType === 'pickup' ? 'bg-[#C8A97E]' : 'bg-[#F8F5F0]'
                 }`}>
-                  <MapPin size={20} className={formData.orderType === 'pickup' ? 'text-white' : 'text-[#3A2F2A]'} />
+                  <Store size={20} className={formData.orderType === 'pickup' ? 'text-white' : 'text-[#3A2F2A]'} />
                 </div>
                 <div>
                   <p className="font-medium text-[#3A2F2A]">{t.pickup}</p>
@@ -251,29 +293,92 @@ const CheckoutModal = () => {
               </div>
             </button>
 
-            <button
-              onClick={() => setFormData(prev => ({ ...prev, orderType: 'dineIn' }))}
-              className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                formData.orderType === 'dineIn'
-                  ? 'border-[#C8A97E] bg-[#C8A97E]/10'
-                  : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
-              }`}
-            >
-              <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                  formData.orderType === 'dineIn' ? 'bg-[#C8A97E]' : 'bg-[#F8F5F0]'
-                }`}>
-                  <Coffee size={20} className={formData.orderType === 'dineIn' ? 'text-white' : 'text-[#3A2F2A]'} />
+            {/* Dine-in option - only for menu items */}
+            {hasMenuItems && (
+              <button
+                onClick={() => setFormData(prev => ({ ...prev, orderType: 'dineIn' }))}
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                  formData.orderType === 'dineIn'
+                    ? 'border-[#C8A97E] bg-[#C8A97E]/10'
+                    : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
+                }`}
+                data-testid="order-type-dine-in"
+              >
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    formData.orderType === 'dineIn' ? 'bg-[#C8A97E]' : 'bg-[#F8F5F0]'
+                  }`}>
+                    <Coffee size={20} className={formData.orderType === 'dineIn' ? 'text-white' : 'text-[#3A2F2A]'} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-[#3A2F2A]">{t.dineIn}</p>
+                    <p className="text-sm text-[#3A2F2A]/60">{t.dineInDesc}</p>
+                  </div>
+                  {formData.orderType === 'dineIn' && (
+                    <Check size={20} className="ml-auto text-[#C8A97E]" />
+                  )}
                 </div>
-                <div>
-                  <p className="font-medium text-[#3A2F2A]">{t.dineIn}</p>
-                  <p className="text-sm text-[#3A2F2A]/60">{t.dineInDesc}</p>
-                </div>
-                {formData.orderType === 'dineIn' && (
-                  <Check size={20} className="ml-auto text-[#C8A97E]" />
-                )}
-              </div>
-            </button>
+              </button>
+            )}
+
+            {/* Address fields for delivery */}
+            <AnimatePresence>
+              {formData.orderType === 'delivery' && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-4 space-y-4 border-t border-[#E5E0D8] mt-4">
+                    <p className="text-xs uppercase tracking-wider text-[#C8A97E]">
+                      {language === 'hu' ? 'Szallitasi cim' : 'Delivery Address'}
+                    </p>
+                    <div>
+                      <Label htmlFor="address" className="text-[#3A2F2A]">{t.address}</Label>
+                      <Input
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className={`mt-1 ${errors.address ? 'border-red-500' : 'border-[#E5E0D8]'}`}
+                        placeholder={language === 'hu' ? 'Utca, hazszam' : 'Street, number'}
+                        data-testid="checkout-address-input"
+                      />
+                      {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="city" className="text-[#3A2F2A]">{t.city}</Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          className={`mt-1 ${errors.city ? 'border-red-500' : 'border-[#E5E0D8]'}`}
+                          placeholder="Budapest"
+                          data-testid="checkout-city-input"
+                        />
+                        {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+                      </div>
+                      <div>
+                        <Label htmlFor="zipCode" className="text-[#3A2F2A]">{t.zipCode}</Label>
+                        <Input
+                          id="zipCode"
+                          name="zipCode"
+                          value={formData.zipCode}
+                          onChange={handleInputChange}
+                          className={`mt-1 ${errors.zipCode ? 'border-red-500' : 'border-[#E5E0D8]'}`}
+                          placeholder="1133"
+                          data-testid="checkout-zip-input"
+                        />
+                        {errors.zipCode && <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         );
 
@@ -292,6 +397,7 @@ const CheckoutModal = () => {
                   ? 'border-[#C8A97E] bg-[#C8A97E]/10'
                   : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
               }`}
+              data-testid="payment-card"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
@@ -313,6 +419,7 @@ const CheckoutModal = () => {
                   ? 'border-[#C8A97E] bg-[#C8A97E]/10'
                   : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
               }`}
+              data-testid="payment-apple-pay"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
@@ -334,6 +441,7 @@ const CheckoutModal = () => {
                   ? 'border-[#C8A97E] bg-[#C8A97E]/10'
                   : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'
               }`}
+              data-testid="payment-cash"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
@@ -367,14 +475,19 @@ const CheckoutModal = () => {
               </h3>
               <div className="space-y-3 max-h-40 overflow-y-auto">
                 {cart.map((item) => (
-                  <div key={`${item.id}-${item.size}`} className="flex justify-between items-center">
+                  <div key={`${item.id}-${item.size || 'default'}`} className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                       <span className="text-sm bg-[#F8F5F0] px-2 py-1 rounded">
                         {item.quantity}x
                       </span>
-                      <span className="text-[#3A2F2A]">
-                        {language === 'hu' ? item.name_hu : item.name_en}
-                      </span>
+                      <div>
+                        <span className="text-[#3A2F2A]">
+                          {language === 'hu' ? item.name_hu : item.name_en}
+                        </span>
+                        {item.type === 'bean' && (
+                          <span className="text-xs text-[#3A2F2A]/50 ml-1">({item.weight}g)</span>
+                        )}
+                      </div>
                     </div>
                     <span className="text-[#3A2F2A]">
                       {((item.finalPrice || item.price) * item.quantity).toLocaleString()} Ft
@@ -391,17 +504,38 @@ const CheckoutModal = () => {
                 <span>{t.subtotal}</span>
                 <span>{subtotal.toLocaleString()} Ft</span>
               </div>
+              {formData.orderType === 'delivery' && (
+                <div className="flex justify-between text-[#3A2F2A]/70">
+                  <span>{t.deliveryFee}</span>
+                  <span>{deliveryFee > 0 ? `${deliveryFee.toLocaleString()} Ft` : t.free}</span>
+                </div>
+              )}
               <div className="flex justify-between text-lg font-medium text-[#3A2F2A]">
                 <span>{t.total}</span>
-                <span className="text-[#C8A97E]">{subtotal.toLocaleString()} Ft</span>
+                <span className="text-[#C8A97E]">{total.toLocaleString()} Ft</span>
               </div>
             </div>
 
             <div className="h-px bg-[#E5E0D8]" />
 
-            <div className="flex items-center gap-3 text-sm text-[#3A2F2A]/70">
-              <Coffee size={16} className="text-[#C8A97E]" />
-              <span>{t.prepTime}: 5-10 {t.minutes}</span>
+            <div className="space-y-2">
+              {formData.orderType === 'delivery' ? (
+                <div className="flex items-center gap-3 text-sm text-[#3A2F2A]/70">
+                  <Truck size={16} className="text-[#C8A97E]" />
+                  <span>{t.deliveryTime}: {t.businessDays}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 text-sm text-[#3A2F2A]/70">
+                  <Coffee size={16} className="text-[#C8A97E]" />
+                  <span>{t.prepTime}: 5-10 {t.minutes}</span>
+                </div>
+              )}
+              {formData.orderType === 'delivery' && formData.address && (
+                <div className="flex items-start gap-3 text-sm text-[#3A2F2A]/70">
+                  <MapPin size={16} className="text-[#C8A97E] mt-0.5" />
+                  <span>{formData.address}, {formData.zipCode} {formData.city}</span>
+                </div>
+              )}
             </div>
           </motion.div>
         );
@@ -411,7 +545,6 @@ const CheckoutModal = () => {
     }
   };
 
-  // Order complete screen
   const renderOrderComplete = () => (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -454,7 +587,10 @@ const CheckoutModal = () => {
         <p className="text-sm text-[#3A2F2A]/60 mb-1">{t.orderNumber}</p>
         <p className="text-2xl font-medium text-[#C8A97E]">{orderNumber}</p>
         <p className="text-sm text-[#3A2F2A]/60 mt-4">
-          {t.prepTime}: 5-10 {t.minutes}
+          {formData.orderType === 'delivery' 
+            ? `${t.deliveryTime}: ${t.businessDays}`
+            : `${t.prepTime}: 5-10 ${t.minutes}`
+          }
         </p>
       </motion.div>
 
@@ -466,6 +602,7 @@ const CheckoutModal = () => {
         <Button
           onClick={closeCheckout}
           className="bg-[#3A2F2A] hover:bg-[#2A1F1A] text-white px-8 py-4"
+          data-testid="order-complete-close-btn"
         >
           {t.backToMenu}
         </Button>
@@ -483,7 +620,6 @@ const CheckoutModal = () => {
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={!isProcessing ? closeCheckout : undefined}
         >
-          {/* Backdrop */}
           <motion.div 
             className="absolute inset-0 bg-[#1A1614]/60 backdrop-blur-md"
             initial={{ opacity: 0 }}
@@ -491,17 +627,15 @@ const CheckoutModal = () => {
             exit={{ opacity: 0 }}
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
             data-testid="checkout-modal"
           >
-            {/* Header */}
             {!orderComplete && (
               <div className="p-6 border-b border-[#E5E0D8]">
                 <div className="flex items-center justify-between mb-6">
@@ -512,12 +646,12 @@ const CheckoutModal = () => {
                     onClick={closeCheckout}
                     disabled={isProcessing}
                     className="p-2 hover:bg-[#F8F5F0] rounded-lg transition-colors disabled:opacity-50"
+                    data-testid="checkout-close-btn"
                   >
                     <X size={20} />
                   </button>
                 </div>
 
-                {/* Progress Steps */}
                 <div className="flex items-center justify-between">
                   {steps.map((step, index) => (
                     <React.Fragment key={step}>
@@ -550,14 +684,12 @@ const CheckoutModal = () => {
               </div>
             )}
 
-            {/* Content */}
             <div className="p-6">
               <AnimatePresence mode="wait">
                 {orderComplete ? renderOrderComplete() : renderStep()}
               </AnimatePresence>
             </div>
 
-            {/* Footer */}
             {!orderComplete && (
               <div className="p-6 border-t border-[#E5E0D8] flex gap-3">
                 {currentStep > 0 && (
@@ -566,6 +698,7 @@ const CheckoutModal = () => {
                     disabled={isProcessing}
                     variant="outline"
                     className="flex-1 border-[#E5E0D8] text-[#3A2F2A]"
+                    data-testid="checkout-back-btn"
                   >
                     <ArrowLeft size={16} className="mr-2" />
                     {t.back}
@@ -576,6 +709,7 @@ const CheckoutModal = () => {
                   <Button
                     onClick={handleNext}
                     className="flex-1 bg-[#C8A97E] hover:bg-[#B8996E] text-white"
+                    data-testid="checkout-next-btn"
                   >
                     {t.next}
                     <ArrowRight size={16} className="ml-2" />
@@ -585,6 +719,7 @@ const CheckoutModal = () => {
                     onClick={handlePlaceOrder}
                     disabled={isProcessing}
                     className="flex-1 bg-[#3A2F2A] hover:bg-[#2A1F1A] text-white"
+                    data-testid="checkout-place-order-btn"
                   >
                     {isProcessing ? (
                       <>
