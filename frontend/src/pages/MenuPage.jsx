@@ -4,7 +4,9 @@ import { X, ShoppingBag, Coffee, Minus, Plus } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useLanguage } from '../context/LanguageContext';
+import { useCart } from '../context/CartContext';
 import { Button } from '../components/ui/button';
+import { toast } from 'sonner';
 import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -80,7 +82,8 @@ const MenuItemCard = ({ item, index, language, onClick }) => {
 };
 
 // Full Screen Modal Component
-const MenuItemModal = ({ item, isOpen, onClose, language, onAddToCart }) => {
+const MenuItemModal = ({ item, isOpen, onClose, language }) => {
+  const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState('medium');
   const [quantity, setQuantity] = useState(1);
   
@@ -325,7 +328,18 @@ const MenuItemModal = ({ item, isOpen, onClose, language, onAddToCart }) => {
                 >
                   <Button
                     onClick={() => {
-                      onAddToCart({ ...item, size: selectedSize, quantity, finalPrice: finalPrice * quantity });
+                      addToCart({ 
+                        ...item, 
+                        size: selectedSize, 
+                        quantity, 
+                        finalPrice: finalPrice 
+                      });
+                      toast.success(
+                        language === 'hu' ? 'Hozzáadva a kosárhoz!' : 'Added to cart!',
+                        {
+                          description: `${quantity}x ${language === 'hu' ? item.name_hu : item.name_en}`,
+                        }
+                      );
                       onClose();
                     }}
                     className="flex-1 bg-[#C8A97E] hover:bg-[#B8996E] text-[#1A1614] py-4 text-sm font-medium tracking-wide transition-all hover:scale-[1.02]"
@@ -352,45 +366,12 @@ const MenuItemModal = ({ item, isOpen, onClose, language, onAddToCart }) => {
   );
 };
 
-// Cart Preview Component
-const CartPreview = ({ cart, language }) => {
-  const total = cart.reduce((sum, item) => sum + (item.finalPrice || item.price * item.quantity), 0);
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  return (
-    <AnimatePresence>
-      {cart.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 100, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 100, scale: 0.9 }}
-          className="fixed bottom-6 right-6 bg-[#1A1614] text-[#F8F5F0] p-5 rounded-sm shadow-2xl z-40"
-          data-testid="cart-preview"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#C8A97E] rounded-sm flex items-center justify-center">
-              <ShoppingBag size={20} className="text-[#1A1614]" />
-            </div>
-            <div>
-              <p className="text-sm text-[#F8F5F0]/70">
-                {itemCount} {language === 'hu' ? 'tétel' : 'items'}
-              </p>
-              <p className="text-lg font-medium">{total.toLocaleString()} Ft</p>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
 const MenuPage = () => {
   const { t, language } = useLanguage();
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedItem, setSelectedItem] = useState(null);
-  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -412,20 +393,6 @@ const MenuPage = () => {
   const filteredItems = activeCategory === 'all' 
     ? menuItems 
     : menuItems.filter(item => item.category === activeCategory);
-
-  const handleAddToCart = (item) => {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.id === item.id && i.size === item.size);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === item.id && i.size === item.size
-            ? { ...i, quantity: i.quantity + item.quantity, finalPrice: i.finalPrice + item.finalPrice }
-            : i
-        );
-      }
-      return [...prev, item];
-    });
-  };
 
   return (
     <div className="min-h-screen bg-[#F8F5F0]" data-testid="menu-page">
@@ -528,11 +495,7 @@ const MenuPage = () => {
         isOpen={!!selectedItem}
         onClose={() => setSelectedItem(null)}
         language={language}
-        onAddToCart={handleAddToCart}
       />
-
-      {/* Cart Preview */}
-      <CartPreview cart={cart} language={language} />
 
       <Footer />
     </div>

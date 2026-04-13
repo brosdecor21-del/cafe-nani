@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useCart } from '../../context/CartContext';
 
-// Original NANI logo with black background (screen blend makes black transparent)
+// Original NANI logo
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_bird-spirit-cafe/artifacts/h6dh4udx_nani1.png";
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { getItemCount, toggleCart, lastAddedItem } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  
+  const itemCount = getItemCount();
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -45,7 +39,7 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo - Original with screen blend to remove black background */}
+          {/* Logo */}
           <Link to="/" className="flex items-center" data-testid="header-logo">
             <img 
               src={LOGO_URL} 
@@ -81,8 +75,42 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Language Switcher & Mobile Menu */}
+          {/* Cart, Language Switcher & Mobile Menu */}
           <div className="flex items-center gap-4">
+            {/* Cart Icon */}
+            <motion.button
+              onClick={toggleCart}
+              className="relative p-2 text-[#C9A66B] hover:text-[#C9A66B]/80 transition-colors"
+              data-testid="cart-icon"
+              whileTap={{ scale: 0.95 }}
+            >
+              <ShoppingBag size={22} />
+              <AnimatePresence>
+                {itemCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-[#C9A66B] text-[#1A1614] text-xs font-bold rounded-full flex items-center justify-center"
+                  >
+                    {itemCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              {/* Pulse animation when item added */}
+              <AnimatePresence>
+                {lastAddedItem && (
+                  <motion.span
+                    initial={{ scale: 1, opacity: 1 }}
+                    animate={{ scale: 2, opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0 bg-[#C9A66B] rounded-full"
+                  />
+                )}
+              </AnimatePresence>
+            </motion.button>
+
             {/* Language Switcher */}
             <div className="flex bg-[#2C2420] rounded-full p-1 gap-1" data-testid="language-switcher">
               <button
