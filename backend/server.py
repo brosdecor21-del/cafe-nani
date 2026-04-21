@@ -177,6 +177,16 @@ async def create_menu_item(data: MenuItemCreate):
     await db.menu_items.insert_one(doc)
     return item
 
+@api_router.delete("/menu/{item_id}")
+async def delete_menu_item(item_id: str):
+    # Use delete_one and match the 'id' field from your model
+    result = await db.menu_items.delete_one({"id": item_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Menu item not found")
+        
+    return {"message": "Menu item deleted successfully"}
+
 # Contact Form with Resend
 @api_router.post("/contact")
 async def send_contact_email(data: ContactFormRequest):
