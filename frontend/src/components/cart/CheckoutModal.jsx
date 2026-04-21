@@ -13,7 +13,7 @@ const steps = ['details', 'orderType', 'payment', 'review'];
 
 const CheckoutModal = () => {
   const { cart, isCheckoutOpen, closeCheckout, getSubtotal, clearCart } = useCart();
-  const { language, t } = useLanguage();
+ const { language } = useLanguage();
   
   const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
