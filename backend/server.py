@@ -412,6 +412,48 @@ async def seed_data():
     
     return {"message": "Data seeded successfully", "beans": len(coffee_beans), "reviews": len(reviews), "menu_items": len(menu_items)}
 
+class OrderRequest(BaseModel):
+    customer_name: str
+    email: EmailStr
+    items: List[dict]
+    total: int
+
+@api_router.post("/orders")
+async def process_order(data: OrderRequest):
+    items_html = "".join([
+        f"<li>{item.get('quantity', 1)}x {item.get('name_hu', 'Termék')} ({item.get('price', 0)} Ft)</li>" 
+        for item in data.items
+    ])
+
+    html_content = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2 style="color: #2C2420;">Új rendelés érkezett!</h2>
+        <div style="background: #F9F6F0; padding: 20px; border-radius: 8px;">
+            <p><strong>Vásárló:</strong> {data.customer_name}</p>
+            <p><strong>Email:</strong> {data.email}</p>
+            <hr>
+            <p><strong>Rendelt tételek:</strong></p>
+            <ul>{items_html}</ul>
+            <p><strong>Összesen:</strong> {data.total} Ft</p>
+        </div>
+    </body>
+    </html>
+    """
+    
+    params = {
+        "from": SENDER_EMAIL,
+        "to": [SENDER_EMAIL],
+        "subject": f"Új rendelés: {data.customer_name}",
+        "html": html_content
+    }
+    
+    try:
+        await asyncio.to_thread(resend.Emails.send, params)
+        return {"status": "success", "message": "Rendelés elküldve!"}
+    except Exception as e:
+        logger.error(f"Hiba: {str(e)}")
+        return {"status": "error", "message": str(e)}
 # Include the router in the main app
 app.include_router(api_router)
 
