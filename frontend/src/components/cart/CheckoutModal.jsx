@@ -169,7 +169,7 @@ const CheckoutModal = () => {
       };
 
       // Ez a fontos rész: elküldjük a backendnek az adatokat
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/orders`, orderData);
+      const response = await axios.post('https://cafe-nani-backend1.onrender.com/api/orders', orderData);
 
       if (response.data.status === "success" || response.status === 200) {
         // Ha sikeres, jöhet a konfetti és a siker üzenet
