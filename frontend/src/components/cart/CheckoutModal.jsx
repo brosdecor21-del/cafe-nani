@@ -155,18 +155,39 @@ const CheckoutModal = () => {
 
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const orderNum = `NANI-${Date.now().toString(36).toUpperCase()}`;
-    setOrderNumber(orderNum);
-    setOrderComplete(true);
-    setIsProcessing(false);
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#C8A97E', '#3A2F2A', '#F8F5F0'],
-    });
-    clearCart();
+    try {
+      const orderData = {
+        customer_name: formData.name,
+        email: formData.email,
+        items: cartItems.map(item => ({
+          name_hu: item.name_hu || item.name,
+          quantity: item.quantity,
+          price: item.finalPrice || item.price
+        })),
+        total: total
+      };
+
+      // Ez a fontos rész: elküldjük a backendnek az adatokat
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/orders`, orderData);
+
+      if (response.data.status === "success" || response.status === 200) {
+        // Ha sikeres, jöhet a konfetti és a siker üzenet
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#C8A97E', '#3A2F2A', '#F8F5F0'],
+        });
+        setOrderComplete(true);
+        clearCart();
+        toast.success("Rendelésedet elküldtük az üzletnek!");
+      }
+    } catch (error) {
+      console.error("Rendelési hiba:", error);
+      toast.error("Nem sikerült elküldeni a rendelést. Kérjük, próbáld újra!");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleInputChange = (e) => {
