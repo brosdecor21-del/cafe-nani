@@ -7,12 +7,13 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import confetti from 'canvas-confetti';
+import axios from 'axios';
 
 const steps = ['details', 'orderType', 'payment', 'review'];
 
 const CheckoutModal = () => {
   const { cart, isCheckoutOpen, closeCheckout, getSubtotal, clearCart } = useCart();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   
   const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
