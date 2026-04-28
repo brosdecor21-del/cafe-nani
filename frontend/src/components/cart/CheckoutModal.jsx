@@ -136,7 +136,7 @@ const CheckoutModal = () => {
       if (!formData.zipCode.trim()) newErrors.zipCode = t.required;
     }
     
-    setErrors(newErrors);
+    setErrors(newErrors);1
     return Object.keys(newErrors).length === 0;
   };
 
@@ -154,13 +154,13 @@ const CheckoutModal = () => {
     }
   };
 
-  const handlePlaceOrder = async () => {
+const handlePlaceOrder = async () => {
     setIsProcessing(true);
     try {
       const orderData = {
         customer_name: formData.name,
         email: formData.email,
-        items: cartItems.map(item => ({
+        items: cart.map(item => ({ 
           name_hu: item.name_hu || item.name,
           quantity: item.quantity,
           price: item.finalPrice || item.price
@@ -168,11 +168,9 @@ const CheckoutModal = () => {
         total: total
       };
 
-      // Ez a fontos rész: elküldjük a backendnek az adatokat
       const response = await axios.post('https://cafe-nani-backend1.onrender.com/api/orders', orderData);
 
       if (response.data.status === "success" || response.status === 200) {
-        // Ha sikeres, jöhet a konfetti és a siker üzenet
         confetti({
           particleCount: 100,
           spread: 70,
@@ -181,11 +179,10 @@ const CheckoutModal = () => {
         });
         setOrderComplete(true);
         clearCart();
-        toast.success("Rendelésedet elküldtük az üzletnek!");
       }
     } catch (error) {
       console.error("Rendelési hiba:", error);
-      toast.error("Nem sikerült elküldeni a rendelést. Kérjük, próbáld újra!");
+      alert("Nem sikerült elküldeni a rendelést. Kérjük, próbáld újra!"); 
     } finally {
       setIsProcessing(false);
     }
