@@ -206,8 +206,8 @@ async def send_contact_email(data: ContactFormRequest):
     """
     
     params = {
-        "from": SENDER_EMAIL,
-        "to": [SENDER_EMAIL],  # In production, change to actual business email
+        "from": "onboarding@resend.dev",
+        "to": [SENDER_EMAIL],# In production, change to actual business email
         "subject": f"Café Nani Contact: {data.subject}",
         "html": html_content,
         "reply_to": data.email
@@ -442,7 +442,7 @@ async def process_order(data: OrderRequest):
     """
     
     params = {
-        "from": SENDER_EMAIL,
+        "from": "onboarding@resend.dev",
         "to": [SENDER_EMAIL],
         "subject": f"Új rendelés: {data.customer_name}",
         "html": html_content
