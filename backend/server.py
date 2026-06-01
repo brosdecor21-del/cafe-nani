@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import stripe
 import logging
 import asyncio
 from pathlib import Path
@@ -23,6 +24,7 @@ db = client[os.environ['DB_NAME']]
 import resend
 resend.api_key = os.environ.get('RESEND_API_KEY', '')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 
 # Create the main app
 app = FastAPI()
@@ -468,3 +470,18 @@ app.add_middleware(
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+@app.post("/api/create-payment-intent")
+async def create_payment_intent(payload: dict):
+    try:
+        amount = payload.get("amount", 0)
+        
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency="huf",
+            automatic_payment_methods={"enabled": True},
+        )
+        return {"clientSecret": intent["client_secret"]}
+    except Exception as e:
+        return {"error": str(e)}
