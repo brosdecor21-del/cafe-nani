@@ -463,7 +463,7 @@ async def process_order(data: OrderRequest):
 @api_router.post("/create-payment-intent")
 async def create_payment_intent(payload: dict):
     try:
-        amount = payload.get("amount", 0) * 100)
+        amount = int(payload.get("amount", 0) * 100)
         
         intent = stripe.PaymentIntent.create(
             amount=amount,
