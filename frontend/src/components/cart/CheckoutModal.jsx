@@ -13,7 +13,7 @@ import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
-// 2. Initialize Stripe with your Publishable Key (Replace with your actual pk_test_ key)
+// 2. Initialize Stripe with your Publishable Key wrapped inside quotes
 const stripePromise = loadStripe('pk_test_51TdVgiK0zyO21VxYNJOEgU1xdiD9bkyFtiRum5cua5N0saD9K6MwQVmX3mQdOSBS2WG7Vvlnbp03ynoTLnIVMuBb005Frkl1lx');
 
 const steps = ['details', 'orderType', 'payment', 'review'];
@@ -50,13 +50,11 @@ const CheckoutModalInner = ({
   const { cart, clearCart } = useCart();
   const { language } = useLanguage();
 
-  // Handle step progression & fetching the payment authorization from Python backend
   const handleNext = async () => {
     if (validateStep()) {
       if (currentStep === 1) {
         setIsProcessing(true);
         try {
-          // Contact your newly created FastAPI endpoint
           const response = await axios.post('https://cafe-nani-backend1.onrender.com/api/create-payment-intent', {
             amount: total,
           });
@@ -79,7 +77,6 @@ const CheckoutModalInner = ({
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
     try {
-      // If customer chose Card or Apple Pay, confirm transaction with Stripe first
       if (formData.paymentMethod === 'card' || formData.paymentMethod === 'applePay') {
         if (!stripe || !elements) {
           alert("Stripe interface is still loading. Please wait a moment.");
@@ -99,7 +96,6 @@ const CheckoutModalInner = ({
         }
       }
 
-      // If Stripe payment passes (or payment method is cash), dispatch confirmation emails
       const orderData = {
         customer_name: formData.name,
         email: formData.email,
@@ -232,7 +228,6 @@ const CheckoutModalInner = ({
       case 2:
         return (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
-            {/* Payment selections remain clean */}
             <button onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'card' }))} className={`w-full p-4 rounded-xl border-2 text-left transition-all ${formData.paymentMethod === 'card' ? 'border-[#C8A97E] bg-[#C8A97E]/10' : 'border-[#E5E0D8] hover:border-[#C8A97E]/50'}`} data-testid="payment-card">
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${formData.paymentMethod === 'card' ? 'bg-[#C8A97E]' : 'bg-[#F8F5F0]'}`}>
@@ -256,7 +251,6 @@ const CheckoutModalInner = ({
               </div>
             </button>
 
-            {/* Smart Stripe Component Inject: If online method is active, display native card or context Apple Pay button */}
             {formData.paymentMethod === 'card' && clientSecret && (
               <div className="mt-4 p-4 border border-[#E5E0D8] rounded-xl bg-[#F8F5F0]/30 min-h-[150px]">
                 <PaymentElement />
@@ -559,7 +553,6 @@ const CheckoutModal = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={!isProcessing ? closeCheckout : undefined}>
           <div className="absolute inset-0 bg-[#1A1614]/60 backdrop-blur-md" />
           
-          {/* Conditional Wrapper: Mount Stripe Context Layout if Client Secret is available */}
           {clientSecret ? (
             <Elements stripe={stripePromise} options={{ clientSecret, locale: language }}>
               <CheckoutModalInner
