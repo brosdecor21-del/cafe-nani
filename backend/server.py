@@ -417,56 +417,67 @@ async def seed_data():
     
     return {"message": "Data seeded successfully", "beans": len(coffee_beans), "reviews": len(reviews), "menu_items": len(menu_items)}
 
+class OrderRequest(BaseModel):
+    customer_name: str
+    email: EmailStr
+    items: List[dict]
+    total: int
+
 @api_router.post("/orders")
-async def process_order(data: dict): 
+async def process_order(data: OrderRequest):
+    items_html = "".join([
+        f"<li>{item.get('quantity', 1)}x {item.get('name_hu', 'Termék')} ({item.get('price', 0)} Ft)</li>" 
+        for item in data.items
+    ])
+
+    html_content = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2 style="color: #2C2420;">Új rendelés érkezett!</h2>
+        <div style="background: #F9F6F0; padding: 20px; border-radius: 8px;">
+            <p><strong>Vásárló:</strong> {data.customer_name}</p>
+            <p><strong>Email:</strong> {data.email}</p>
+            <hr>
+            <p><strong>Rendelt tételek:</strong></p>
+            <ul>{items_html}</ul>
+            <p><strong>Összesen:</strong> {data.total} Ft</p>
+        </div>
+    </body>
+    </html>
+    """
+    
+    params = {
+        "from": "onboarding@resend.dev",
+        "to": [SENDER_EMAIL],
+        "subject": f"Új rendelés: {data.customer_name}",
+        "html": html_content
+    }
+    
     try:
-        customer_name = data.get("customer_name", "Vásárló")
-        email = data.get("email", "")
-        items = data.get("items", [])
-        total = data.get("total", 0)
-
-        # Build the HTML summary list safely without forcing a strict 'name_en' schema constraint
-        items_html = "".join([
-            f"<li>{item.get('quantity', 1)}x {item.get('name_hu', item.get('name', 'Termék'))} ({item.get('price', 0)} Ft)</li>" 
-            for item in items
-        ])
-
-        html_content = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2 style="color: #2C2420;">Új rendelés érkezett!</h2>
-            <div style="background: #F9F6F0; padding: 20px; border-radius: 8px;">
-                <p><strong>Vásárló:</strong> {customer_name}</p>
-                <p><strong>Email:</strong> {email}</p>
-                <hr>
-                <p><strong>Rendelt tételek:</strong></p>
-                <ul>{items_html}</ul>
-                <p><strong>Összesen:</strong> {total} Ft</p>
-            </div>
-        </body>
-        </html>
-        """
-        
-        params = {
-            "from": "onboarding@resend.dev",
-            "to": [SENDER_EMAIL],
-            "subject": f"Új rendelés: {customer_name}",
-            "html": html_content
-        }
-        
-        # Uses standard compatible loop run_in_executor format
-        try:
-            loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, lambda: resend.Emails.send(**params))
-        except Exception as email_err:
-            logger.error(f"Hiba az email küldésekor: {str(email_err)}")
-            # Caught safely so notification breakdown issues never block a successful payment confirmation screen
-
+        await asyncio.to_thread(resend.Emails.send, **params)
         return {"status": "success", "message": "Rendelés elküldve!"}
-
     except Exception as e:
-        logger.error(f"Hiba a rendelés feldolgozásakor: {str(e)}")
+        logger.error(f"Hiba: {str(e)}")
         return {"status": "error", "message": str(e)}
+
+@api_router.post("/create-payment-intent")
+async def create_payment_intent(payload: dict):
+    try:
+        amount = payload.get("amount", 0)
+        # Multiply by 100 to scale HUF into core minor units for Stripe
+        stripe_amount = int(amount * 100)
+        
+        intent = stripe.PaymentIntent.create(
+            amount=stripe_amount,
+            currency="huf",
+            automatic_payment_methods={"enabled": True},
+        )
+        return {"clientSecret": intent["client_secret"]}
+    except Exception as e:
+        return {"error": str(e)}
+
+# Include the router in the main app
+app.include_router(api_router)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
