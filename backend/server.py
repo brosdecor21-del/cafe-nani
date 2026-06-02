@@ -221,7 +221,7 @@ async def send_contact_email(data: ContactFormRequest):
     }
     
     try:
-        email = await asyncio.to_thread(resend.Emails.send, params)
+        email = await asyncio.to_thread(resend.Emails.send, **params)
         logger.info(f"Contact email sent from {data.email}")
         return {
             "status": "success",
@@ -454,7 +454,7 @@ async def process_order(data: OrderRequest):
     }
     
     try:
-        await asyncio.to_thread(resend.Emails.send, params)
+        await asyncio.to_thread(resend.Emails.send, **params)
         return {"status": "success", "message": "Rendelés elküldve!"}
     except Exception as e:
         logger.error(f"Hiba: {str(e)}")
@@ -463,10 +463,12 @@ async def process_order(data: OrderRequest):
 @api_router.post("/create-payment-intent")
 async def create_payment_intent(payload: dict):
     try:
-        amount = int(payload.get("amount", 0) * 100)
+        amount = payload.get("amount", 0)
+        # Multiply by 100 to scale HUF into core minor units for Stripe
+        stripe_amount = int(amount * 100)
         
         intent = stripe.PaymentIntent.create(
-            amount=amount,
+            amount=stripe_amount,
             currency="huf",
             automatic_payment_methods={"enabled": True},
         )
