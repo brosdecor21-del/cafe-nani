@@ -50,7 +50,7 @@ const CheckoutModalInner = ({
   const { cart, clearCart } = useCart();
   const { language } = useLanguage();
 
-  const handleNext = async () => {
+const handleNext = async () => {
     if (validateStep()) {
       if (currentStep === 1) {
         setIsProcessing(true);
@@ -58,10 +58,16 @@ const CheckoutModalInner = ({
           const response = await axios.post('https://cafe-nani-backend1.onrender.com/api/create-payment-intent', {
             amount: total,
           });
+          
           if (response.data.clientSecret) {
             setClientSecret(response.data.clientSecret);
+            setCurrentStep(2); // Only move forward if Stripe token exists!
+          } else if (response.data.error) {
+            // Alert the exact reason the backend Stripe initialization failed
+            alert("Stripe Error from Server: " + response.data.error);
+          } else {
+            alert("Could not load payment interface. Backend did not return a clientSecret.");
           }
-          setCurrentStep(2);
         } catch (err) {
           console.error("Stripe Token Error:", err);
           alert(language === 'hu' ? "Sikertelen kapcsolódás a bankhoz. Próbáld újra!" : "Failed to communicate with payment gateway. Please try again.");
