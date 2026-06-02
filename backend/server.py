@@ -7,7 +7,7 @@ import stripe
 import logging
 import asyncio
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from pydantic import BaseModel, Field, ConfigDict, EmailStr, Optional
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
@@ -422,6 +422,7 @@ class OrderRequest(BaseModel):
     email: EmailStr
     items: List[dict]
     total: int
+    name_en: Optional[str] = None  # This makes the field optional so the server stops crashing
 
 @api_router.post("/orders")
 async def process_order(data: OrderRequest):
