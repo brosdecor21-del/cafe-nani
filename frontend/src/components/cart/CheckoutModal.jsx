@@ -553,23 +553,11 @@ const CheckoutModal = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={!isProcessing ? closeCheckout : undefined}>
           <div className="absolute inset-0 bg-[#1A1614]/60 backdrop-blur-md" />
           
-          {clientSecret ? (
-            <Elements stripe={stripePromise} options={{ clientSecret, locale: language }}>
-              <CheckoutModalInner
-                currentStep={currentStep} setCurrentStep={setCurrentStep}
-                isProcessing={isProcessing} setIsProcessing={setIsProcessing}
-                orderComplete={orderComplete} setOrderComplete={setOrderComplete}
-                orderNumber={orderNumber} setOrderNumber={setOrderNumber}
-                formData={formData} setFormData={setFormData}
-                errors={errors} setErrors={setErrors}
-                clientSecret={clientSecret} setClientSecret={setClientSecret}
-                handleInputChange={handleInputChange} closeCheckout={closeCheckout}
-                t={t} subtotal={subtotal} deliveryFee={deliveryFee} total={total}
-                hasBeans={hasBeans} hasMenuItems={hasMenuItems} validateStep={validateStep}
-                handleBack={handleBack}
-              />
-            </Elements>
-          ) : (
+          <Elements 
+            key={clientSecret || 'initial'} 
+            stripe={stripePromise} 
+            {...(clientSecret ? { options: { clientSecret, locale: language } } : {})}
+          >
             <CheckoutModalInner
               currentStep={currentStep} setCurrentStep={setCurrentStep}
               isProcessing={isProcessing} setIsProcessing={setIsProcessing}
@@ -583,7 +571,7 @@ const CheckoutModal = () => {
               hasBeans={hasBeans} hasMenuItems={hasMenuItems} validateStep={validateStep}
               handleBack={handleBack}
             />
-          )}
+          </Elements>
         </div>
       )}
     </AnimatePresence>
