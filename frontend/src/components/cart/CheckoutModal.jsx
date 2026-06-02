@@ -80,7 +80,7 @@ const handleNext = async () => {
     }
   };
 
-  const handlePlaceOrder = async () => {
+ const handlePlaceOrder = async () => {
     setIsProcessing(true);
     try {
       if (formData.paymentMethod === 'card' || formData.paymentMethod === 'applePay') {
@@ -110,12 +110,13 @@ const handleNext = async () => {
           quantity: item.quantity,
           price: item.finalPrice || item.price
         })),
-        total: total
+        total: Math.round(total) // Force total to be a clean integer for Pydantic
       };
 
       const response = await axios.post('https://cafe-nani-backend1.onrender.com/api/orders', orderData);
 
-      if (response.data.status === "success" || response.status === 200) {
+      // Strict check: only succeed if backend explicitly states "success"
+      if (response.data && response.data.status === "success") {
         confetti({
           particleCount: 100,
           spread: 70,
@@ -124,15 +125,26 @@ const handleNext = async () => {
         });
         setOrderComplete(true);
         clearCart();
+      } else if (response.data && response.data.status === "error") {
+        // Display graceful error if email dispatch fails but backend returns 200
+        alert("Email Service Error: " + response.data.message);
+      } else {
+        alert("Unexpected response format from server.");
       }
     } catch (error) {
       console.error("Order processing error:", error);
-      alert(language === 'hu' ? "Nem sikerült elküldeni a rendelést. Kérjük, próbáld újra!" : "Order system down. Please retry."); 
+      
+      // If FastAPI returns a 422 Validation Error, print the exact field mismatch
+      if (error.response && error.response.data && error.response.data.detail) {
+        alert("Server Validation Error: " + JSON.stringify(error.response.data.detail));
+      } else {
+        alert(language === 'hu' ? "Nem sikerült elküldeni a rendelést. Kérjük, próbáld újra!" : "Order system down. Please retry."); 
+      }
     } finally {
       setIsProcessing(false);
     }
   };
-
+  
   const renderStep = () => {
     switch (currentStep) {
       case 0:
