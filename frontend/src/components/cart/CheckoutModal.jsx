@@ -14,7 +14,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 // 2. Initialize Stripe with your Publishable Key (Replace with your actual pk_test_ key)
-const stripePromise = loadStripe(pk_test_51TdVgiK0zyO21VxYNJOEgU1xdiD9bkyFtiRum5cua5N0saD9K6MwQVmX3mQdOSBS2WG7Vvlnbp03ynoTLnIVMuBb005Frkl1lx);
+const stripePromise = loadStripe(pk_test_51TdVgiK0zy...);
 
 const steps = ['details', 'orderType', 'payment', 'review'];
 
